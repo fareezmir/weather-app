@@ -3,3 +3,19 @@ body {
     text-align: center;
     margin-top: 20px;
 }
+
+.forecast-item {
+    font-size: 8px;
+    color: black;
+}
+
+#forecast-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+#current-weather {
+    font-size: 24px;
+    font-weight: 800;
+}

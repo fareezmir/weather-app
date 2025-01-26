@@ -3,8 +3,28 @@ const  formEl = document.getElementById("weather-form")
 const  tempEl = document.getElementById("temp-el")
 const  cityEl = document.getElementById("city-name-el")
 const  feelslikeEl = document.getElementById("feels-like-el")
-const  humidityEl = document.getElementById("humidity-el")
 const  errorEl = document.getElementById("error-el")
+const forecastContainer = document.getElementById("forecast-container")
+const condEl = document.getElementById("condition-el")
+
+
+const infoBtn = document.getElementById("info-btn");
+const modal = document.getElementById("info-modal");
+const closeBtn = document.querySelector(".close-btn");
+
+infoBtn.addEventListener("click", () => {
+    modal.style.display = "block";
+});
+
+closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+});
+
+window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});
 
 
 async function fetchWeatherData(location) {
@@ -26,36 +46,39 @@ async function fetchWeatherData(location) {
 }
 
 function displayWeatherInfo(data) {
+    errorEl.textContent = ""
     const {
         location: {name}, current: {temp_c, feelslike_c, humidity, condition:{text, icon}}
     } = data;
 
     //Current Day Info
-    cityEl.textContent = name;
-    tempEl.textContent = temp_c;
-    feelslikeEl.textContent = feelslike_c;
-    humidityEl.textContent = humidity;
-
+    cityEl.innerHTML = name;
+    condEl.innerHTML = `<img src = "http://${icon}">`;
+    tempEl.innerHTML = `<p class = "curr-temp-el">${temp_c.toFixed(0)}°C</p>`
+    feelslikeEl.innerHTML = `<p class = "feelslike-el"> Feels like: ${feelslike_c.toFixed(0)}°C <\p>`;
+    currentWeather.style.display = "inline-block"
     //Forecast
-    displayForcast(data)
+    displayForecast(data)
 }
 
-function displayForcast(data) {
+function displayForecast(data) {
     const {
         forecast: {forecastday}
     } = data;
 
+    forecastContainer.innerHTML = " ";
     forecastday.forEach((day) => {
-        const {date, day: {maxtemp_c, mintemp_c}, condition: {text, icon}} = day;
+        const {date, day: {maxtemp_c, mintemp_c, condition: {text, icon}}} = day;
 
         const forecastDay = document.createElement("div");
-        forecastDay.classList.add("forecast-item")
+        forecastDay.classList.add("forecast-item");
         forecastDay.innerHTML = `
         <h3>${date}<\h3>
-        <p>Max Temp: ${maxtemp_c} <\p>
-        <p> Min Temp: ${mintemp_c} <\p>
-        <p> Condition: ${text} <\p>
-        `
+        <p>H: ${maxtemp_c.toFixed(0)}°C L: ${mintemp_c.toFixed(0)}°C <\p>
+        <img class = "weather-icon" src = "http:${icon}" alt = "${text}">
+        `;
+        forecastContainer.appendChild(forecastDay);
+
 
     });
 }
@@ -71,6 +94,7 @@ formEl.addEventListener("submit", async function(event) {
     if (!location.trim()) {
         displayError()
     }
+
     else {
         try {
             const data = await fetchWeatherData(location);

@@ -12,12 +12,18 @@
     <body>
         <h1>Weather App</h1>
         <form id = "weather-form">
-            <label for ="location">Enter Location:</label>
-            <input type ="text" placeholder="Toronto, M9P 4AX">
+            <label for ="location">Enter City:</label>
+            <input type ="input" id = "user-location" placeholder="Toronto">
             <button>Submit</button>
         </form>
-        
-        <div id = "weather-res"></div>
+        <div id = "error-el"></div>
+        <div id = "current-weather">
+            <p id = "city-name-el"></p>
+            <p id = "temp-el"></p>
+            <p id = condition-el></p>
+            <p id = "feels-like-el"></p>
+        </div>
+        <div id = "forecast-container"></div>
         <script src = "script.js"></script> 
     </body>
 </html>
